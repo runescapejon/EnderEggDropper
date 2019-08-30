@@ -5,14 +5,12 @@ import java.util.concurrent.TimeUnit;
 
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
-import java.lang.reflect.Field;
 import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.GuiceObjectMapperFactory;
 import org.slf4j.Logger;
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.config.ConfigDir;
@@ -22,9 +20,6 @@ import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.complex.EnderDragon;
-import org.spongepowered.api.entity.living.complex.dragon.phase.EnderDragonPhase;
-import org.spongepowered.api.entity.living.complex.dragon.phase.EnderDragonPhaseManager;
-import org.spongepowered.api.entity.living.complex.dragon.phase.EnderDragonPhaseType;
 import org.spongepowered.api.entity.living.complex.dragon.phase.EnderDragonPhaseTypes;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
@@ -35,12 +30,10 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.world.World;
-import org.spongepowered.common.registry.type.entity.EnderDragonPhaseTypeRegistryModule;
-
 import com.flowpowered.math.vector.Vector3d;
 
 @Plugin(id = "endereggdropper", name = "EnderEggDropper", authors = {
-		"runescapejon" }, description = "Place a dragon egg on top of the portal or have the dragon drop the once it's killed", version = "1.0")
+		"runescapejon" }, description = "Place a dragon egg on top of the portal or have the dragon drop the once it's killed", version = "1.1")
 public class EnderEgg {
 	public static EnderEgg instance;
 	private EnderEgg plugin;
