@@ -5,13 +5,14 @@ import java.util.concurrent.TimeUnit;
 
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
-
+import java.lang.reflect.Field;
 import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
 import ninja.leaping.configurate.objectmapping.GuiceObjectMapperFactory;
 import org.slf4j.Logger;
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.block.BlockState;
 import org.spongepowered.api.block.BlockTypes;
 import org.spongepowered.api.config.ConfigDir;
@@ -21,6 +22,10 @@ import org.spongepowered.api.entity.EntityTypes;
 import org.spongepowered.api.entity.Item;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.complex.EnderDragon;
+import org.spongepowered.api.entity.living.complex.dragon.phase.EnderDragonPhase;
+import org.spongepowered.api.entity.living.complex.dragon.phase.EnderDragonPhaseManager;
+import org.spongepowered.api.entity.living.complex.dragon.phase.EnderDragonPhaseType;
+import org.spongepowered.api.entity.living.complex.dragon.phase.EnderDragonPhaseTypes;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.event.game.GameReloadEvent;
@@ -30,6 +35,8 @@ import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.world.World;
+import org.spongepowered.common.registry.type.entity.EnderDragonPhaseTypeRegistryModule;
+
 import com.flowpowered.math.vector.Vector3d;
 
 @Plugin(id = "endereggdropper", name = "EnderEggDropper", authors = {
@@ -110,6 +117,8 @@ public class EnderEgg {
 		return configDirectory;
 	}
 
+	private Task task;
+
 	@Listener
 	public void onEntityDeath(DestructEntityEvent.Death event) {
 		Living entity = event.getTargetEntity();
@@ -126,10 +135,16 @@ public class EnderEgg {
 				world.spawnEntity(items);
 			}
 			if (Config.PlaceDragonEgg) {
-				Task.builder().interval(5, TimeUnit.SECONDS).execute(() -> {
-					event.getTargetEntity().getWorld().setBlock(0, Config.setHeight, 0,
-							BlockState.builder().blockType(BlockTypes.DRAGON_EGG).build());
-				}).submit(this);
+				if (EnderDragonPhaseTypes.DYING != null) {
+
+					task = Task.builder().delay(15, TimeUnit.SECONDS).execute(() -> {
+						event.getTargetEntity().getWorld().setBlock(0, Config.setHeight, 0,
+								BlockState.builder().blockType(BlockTypes.DRAGON_EGG).build());
+
+						task.cancel();
+					}).submit(this);
+
+				}
 			}
 		}
 	}
